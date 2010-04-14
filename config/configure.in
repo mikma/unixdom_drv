@@ -1,0 +1,149 @@
+AC_INIT
+
+dnl work out who the cpu, vendor and OS are
+AC_CANONICAL_SYSTEM
+AC_DEFINE_UNQUOTED(CPU_VENDOR_OS, "$target", CPU_VENDOR_OS)
+
+JUNGERL_DIR=$(dirname `pwd`)
+AC_SUBST(JUNGERL_DIR)
+
+dnl Programs
+
+AC_PROG_CC
+
+AC_PATH_PROG(ERL, erl, erl)
+AC_PATH_PROG(ERLC, erlc, erlc)
+
+dnl Check for "groff" and "ps2pdf", do something silly and harmless if
+dnl they are not available.
+AC_PATH_PROG(GROFF, [groff], [echo groff is not available])
+AC_PATH_PROG(PS2PDF, [ps2pdf], [echo ps2pdf is not available])
+
+ERLDIR=`awk -F= '/ROOTDIR=/ { print [$]2; exit; }' $ERL`
+AC_SUBST(ERLDIR)
+
+dnl C header files
+
+AC_CONFIG_HEADER(../support/config.h:config.h.in)
+
+AC_CHECK_HEADERS(linux/if_tun.h, HAVE_TUNTAP="true")
+
+AC_CHECK_HEADERS(malloc.h)
+
+BT_MSG_CONTROL
+
+dnl For the Slang driver. I don't think this is really currect just now..
+
+AC_ARG_WITH(slang-include, [  --with-slang-include=DIR   installed slang library],
+    if test "X$withval" != X; then
+      HAVE_SLANG="true"
+    fi
+    )
+
+AC_CHECK_HEADERS(slang.h, HAVE_SLANG="true")
+
+AC_SUBST(SLANG_INCLUDE)
+
+case "$target_os" in
+     *cygwin*)
+	:
+	dnl fix this later
+	;;
+      linux*)
+	AC_DEFINE(LINUX,,LINUX)
+	LD_SHARED="ld -shared"
+	;;
+      *bsd*)
+	AC_DEFINE(BSD,,BSD)
+        LD_SHARED="ld -Bshareable"
+	;;
+      *solaris*)
+        AC_DEFINE(SOLARIS,,SOLARIS)
+        LD_SHARED="ld -G"
+	;;
+      *darwin*)
+        AC_DEFINE([DARWIN], [], [Description])
+        LD_SHARED="cc -bundle -flat_namespace -undefined suppress"
+	;;
+      *)
+        LD_SHARED="ld -shared"
+	;;
+esac
+
+AC_SUBST(LD_SHARED)
+
+dnl Skip applications that won't build, after cleaning out old SKIP
+dnl files. Totally empty SKIP files we leave alone -- we don't create
+dnl them, but the user can.
+
+for f in ../lib/*/SKIP; do
+  if test -s $f; then rm $f; fi
+done
+
+if test -z $HAVE_TUNTAP; then
+   echo "No tunnel linux/if_tun.h" > ../lib/tuntap/SKIP
+fi
+
+if test -z $HAVE_SLANG; then
+   echo "No Slang header files" > ../lib/slang/SKIP
+   cp ../lib/slang/SKIP ../lib/ermacs/  # ermacs needs slang
+fi
+
+dnl libnsl and libsocket tests borrowed from ethereal's autoconf scheme.
+dnl # msh@cis.ufl.edu says -lnsl (and -lsocket) are needed for his 386/AT,
+dnl # to get the SysV transport functions.
+dnl # chad@anasazi.com says the Pyramid MIS-ES running DC/OSx (SVR4)
+dnl # needs -lnsl.
+dnl # The nsl library prevents programs from opening the X display
+dnl # on Irix 5.2, according to dickey@clark.net.
+AC_CHECK_FUNC(gethostbyname, ,
+    AC_CHECK_LIB(nsl, gethostbyname, NSL_LIBS="-lnsl"))
+AC_SUBST(NSL_LIBS)
+dnl # lieder@skyler.mavd.honeywell.com says without -lsocket,
+dnl # socket/setsockopt and other routines are undefined under SCO ODT
+dnl # 2.0.  But -lsocket is broken on IRIX 5.2 (and is not necessary
+dnl # on later versions), says simon@lia.di.epfl.ch: it contains
+dnl # gethostby* variants that don't use the nameserver (or something).
+dnl # -lsocket must be given before -lnsl if both are needed.
+dnl # We assume that if connect needs -lnsl, so does gethostbyname.
+AC_CHECK_FUNC(connect, ,
+  AC_CHECK_LIB(socket, connect, SOCKET_LIBS="-lsocket",
+            AC_MSG_ERROR(Function 'socket' not found.), $NSL_LIBS))
+AC_SUBST(SOCKET_LIBS)
+
+dnl
+dnl The "gd1_drv" driver for libgd 1.8.4 requires the following:
+dnl	libgd version 1 (as a shared library!), libpng, libjpeg, libXpm
+dnl If you have all of those things, then create the file
+dnl ../support/GDConfig.mk (according to the instructions in
+dnl ../jungerl/lib/gd1_drv/README) and re-run "make" at the top level.
+dnl
+
+AC_MSG_CHECKING([whether to build gd1_drv driver])
+if test -f ../support/GDConfig.mk ; then
+  rm -f ../lib/gd1_drv/SKIP
+  AC_MSG_RESULT([yes])
+else
+  echo "Missing CVSROOT/jungerl/support/GDConfig.mk file" > ../lib/gd1_drv/SKIP
+  AC_MSG_RESULT([no, see CVSROOT/jungerl/lib/gd1_drv/README for instructions])
+fi
+
+dnl
+dnl The "spread_drv" driver for the Spread reliable multicast toolkit
+dnl is known to work with version 3.17.0 of Spread.
+dnl 
+
+AC_MSG_CHECKING([whether to build spread_drv driver])
+if test -f ../support/SpreadConfig.mk ; then
+  rm -f ../lib/spread_drv/SKIP
+  AC_MSG_RESULT([yes])
+else
+  echo "Missing CVSROOT/jungerl/support/SpreadConfig.mk file" > ../lib/spread_drv/SKIP
+  AC_MSG_RESULT([no, see CVSROOT/jungerl/lib/spread_drv/README for instructions])
+fi
+
+dnl
+dnl End.
+
+AC_OUTPUT(../support/include.mk ../bin/jerl)
+
