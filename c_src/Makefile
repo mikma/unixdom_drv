@@ -1,4 +1,4 @@
-include ../../../support/include.mk
+include ../support/include.mk
 
 CFLAGS += -I$(ERL_C_INCLUDE_DIR) -I.
 

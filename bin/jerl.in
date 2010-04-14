@@ -5,5 +5,5 @@
 basedir=@JUNGERL_DIR@
 erl=@ERL@
 
-${erl} -pa ${basedir}/lib/*/ebin "$@"
+${erl} -pa ${basedir}/ebin "$@"
 

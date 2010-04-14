@@ -1,4 +1,4 @@
-include ../../../support/include.mk
+include ../support/include.mk
 
 # Some modules are automatically generated, so we won't use the
 # include makefile's auto-detected list.
