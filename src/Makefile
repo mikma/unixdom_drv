@@ -14,3 +14,10 @@ clean:
 
 
 distclean:
+
+install: $(OBJECTS)
+	$(INSTALL) -d $(DESTDIR)$(beamdir)
+	$(INSTALL) -d $(DESTDIR)$(includedir)
+	for p in $(OBJECTS); do \
+	  $(install_DATA) $$p $(DESTDIR)$(beamdir) ; \
+	done

@@ -71,3 +71,13 @@ $(DOC_DIR)/%.html: %.erl
 SOCKET_LIBS = @SOCKET_LIBS@
 
 # Miscellaneous
+
+PACKAGE_NAME := @PACKAGE_NAME@
+PACKAGE_VERSION := @PACKAGE_VERSION@
+INSTALL := @INSTALL@
+install_DATA := @INSTALL_DATA@
+LN_S := @LN_S@
+appdir = $(ERLDIR)/lib/$(PACKAGE_NAME)-$(PACKAGE_VERSION)
+beamdir = $(appdir)/ebin
+includedir = $(appdir)/include
+privdir = $(appdir)/priv

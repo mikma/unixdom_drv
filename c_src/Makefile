@@ -27,5 +27,14 @@ clean:
 
 distclean:
 
+install: $(UNIXDOM_DRV_SO)
+	$(INSTALL) -d $(DESTDIR)$(beamdir)
+	$(INSTALL) -d $(DESTDIR)$(privdir)
+	for p in $(UNIXDOM_DRV_SO); do \
+	  $(install_DATA) $$p $(DESTDIR)$(privdir) ; \
+	  $(LN_S) $(UNIXDOM_DRV_SO) $(DESTDIR)$(beamdir) ; \
+	done
+
+
 .INTERMEDIATE: $(SHLIB_OBJS)
 

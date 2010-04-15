@@ -22,3 +22,5 @@ distclean:
                $(MK_INCLUDE) $(JERL)
 
 #extra-clean rm config.h.in configure
+
+install:

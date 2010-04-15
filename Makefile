@@ -8,7 +8,8 @@ DISTCLEAN_SUBDIRS = \
 	src \
 	config
 
-RECURSIVE_TARGETS = all-recursive clean-recursive distclean-recursive
+RECURSIVE_TARGETS = all-recursive clean-recursive distclean-recursive \
+	install-recursive
 
 all: all-recursive
 
@@ -33,3 +34,4 @@ distclean: clean distclean-recursive
 config/configure: config/configure.in
 	(cd config && autoconf)
 
+install: install-recursive

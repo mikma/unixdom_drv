@@ -1,4 +1,4 @@
-AC_INIT([unixdom-drv], [0.1-git])
+AC_INIT([unixdom_drv], [0.1-git])
 
 dnl work out who the cpu, vendor and OS are
 AC_CANONICAL_SYSTEM
@@ -10,6 +10,8 @@ AC_SUBST(JUNGERL_DIR)
 dnl Programs
 
 AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LN_S
 
 AC_PATH_PROG(ERL, erl, erl)
 AC_PATH_PROG(ERLC, erlc, erlc)
