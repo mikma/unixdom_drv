@@ -12,3 +12,5 @@ clean:
 	rm -f ../ebin/unixdom_drv.so
 	rm -f ../priv/unixdom_drv.so
 
+
+distclean:

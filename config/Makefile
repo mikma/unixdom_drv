@@ -16,6 +16,9 @@ configure: configure.in
 	autoconf
 
 clean:
-	-rm -f config.cache config.log config.status configure \
+
+distclean:
+	-$(RM) autom4te.cache config.cache config.log config.status \
                $(MK_INCLUDE) $(JERL)
 
+#extra-clean rm config.h.in configure

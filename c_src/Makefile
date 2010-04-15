@@ -25,5 +25,7 @@ erl_driver_tk.o: erl_driver_tk.c
 clean:
 	-rm $(UNIXDOM_DRV_SO) ../ebin/*.so
 
+distclean:
+
 .INTERMEDIATE: $(SHLIB_OBJS)
 
