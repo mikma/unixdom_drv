@@ -1,4 +1,4 @@
-AC_INIT
+AC_INIT([unixdom-drv], [0.1-git])
 
 dnl work out who the cpu, vendor and OS are
 AC_CANONICAL_SYSTEM
@@ -61,8 +61,8 @@ dnl # gethostby* variants that don't use the nameserver (or something).
 dnl # -lsocket must be given before -lnsl if both are needed.
 dnl # We assume that if connect needs -lnsl, so does gethostbyname.
 AC_CHECK_FUNC(connect, ,
-  AC_CHECK_LIB(socket, connect, SOCKET_LIBS="-lsocket",
-            AC_MSG_ERROR(Function 'socket' not found.), $NSL_LIBS))
+  [AC_CHECK_LIB(socket, connect, SOCKET_LIBS="-lsocket",
+            [AC_MSG_ERROR(Function 'socket' not found.)], $NSL_LIBS)])
 AC_SUBST(SOCKET_LIBS)
 
 dnl
