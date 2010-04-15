@@ -68,5 +68,6 @@ AC_SUBST(SOCKET_LIBS)
 dnl
 dnl End.
 
-AC_OUTPUT(../support/include.mk ../bin/jerl)
+AC_CONFIG_FILES([../support/include.mk ../bin/jerl])
+AC_OUTPUT
 
