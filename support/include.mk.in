@@ -43,8 +43,8 @@ ERL_DOCUMENTS := $(ERL_SOURCES:%.erl=$(DOC_DIR)/%.html)
 APPSCRIPT = '$$vsn=shift; $$mods=""; while(@ARGV){ $$_=shift; s/^([A-Z].*)$$/\'\''$$1\'\''/; $$mods.=", " if $$mods; $$mods .= $$_; } while(<>) { s/%VSN%/$$vsn/; s/%MODULES%/$$mods/; print; }'
 
 
-../ebin/%.app: %.app.src ../vsn.mk Makefile                 
-	perl -e $(APPSCRIPT) "$(VSN)" $(MODULES) < $< > $@  
+../ebin/%.app: %.app.src ../vsn.mk Makefile
+	perl -e $(APPSCRIPT) "$(VSN)" $(MODULES) < $< > $@
 
 ../ebin/%.appup: %.appup
 	cp $< $@

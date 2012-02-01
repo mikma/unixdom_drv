@@ -31,13 +31,13 @@
 -export([shutdown/1]).
 -export([debug/2]).
 -export([
-         null/1, 
-         open/3, 
-         getfd/2, 
-         sendfd/3, 
-         receivefd/2, 
-         close/2, 
-         write/3, 
+         null/1,
+         open/3,
+         getfd/2,
+         sendfd/3,
+         receivefd/2,
+         close/2,
+         write/3,
          read/3
         ]).
 
@@ -73,7 +73,7 @@ shutdown(Port) when port(Port) ->
         {'EXIT', Port, normal} -> {ok, normal};
         {'EXIT', Port, Err}    -> {error, Err}
     after 0                    -> {ok, normall} % XXX is 0 too small?
-        
+
     end.
 
 debug(Port, Flags) when port(Port), integer(Flags) ->
@@ -91,7 +91,7 @@ null(Port
     end.
 
 open(Port,
-     Filename, 
+     Filename,
      Flags
         ) when port(Port) -> % TODO: Add additional constraints here
     {FilenameBinOrList, FilenameLen} = serialize_contiguously(Filename, 1),
@@ -119,11 +119,11 @@ getfd(Port,
     end.
 
 sendfd(Port,
-     Unixdom_Fd, 
+     Unixdom_Fd,
      Fd_To_Be_Sent
         ) when port(Port) -> % TODO: Add additional constraints here
     IOList_____ = <<?S1_SENDFD,
-          Unixdom_Fd:32/integer, 
+          Unixdom_Fd:32/integer,
           Fd_To_Be_Sent:32/integer
         >>,
     case catch erlang:port_command(Port, IOList_____) of
@@ -155,13 +155,13 @@ close(Port,
     end.
 
 write(Port,
-     Fd, 
+     Fd,
      Ptr
         ) when port(Port) -> % TODO: Add additional constraints here
     {valmap_fd, FdIndex} = Fd,
     {PtrBinOrList, PtrLen} = serialize_contiguously(Ptr, 0),
     IOList_____ = [ <<?S1_WRITE,
-            FdIndex:32/integer, 
+            FdIndex:32/integer,
             PtrLen:32/integer>>,                % I/O list length
           PtrBinOrList,
           <<
@@ -172,12 +172,12 @@ write(Port,
     end.
 
 read(Port,
-     Fd, 
+     Fd,
      Size
         ) when port(Port) -> % TODO: Add additional constraints here
     {valmap_fd, FdIndex} = Fd,
     IOList_____ = <<?S1_READ,
-            FdIndex:32/integer, 
+            FdIndex:32/integer,
           Size:32/integer
         >>,
     case catch erlang:port_command(Port, IOList_____) of
@@ -185,7 +185,7 @@ read(Port,
         Err  -> throw(Err)              % XXX Is this too drastic?
     end.
 
-    
+
 %%%
 %%% Internal functions.
 %%%
@@ -225,7 +225,7 @@ get_port_reply(Port) when port(Port) ->
         {Port, Reason} -> throw({port_error, Reason})   % XXX too drastic?
     end.
 
-%% This function exists to provide consistency of replies 
+%% This function exists to provide consistency of replies
 %% given by linked-in and pipe drivers.  The "receive" statement
 %% in get_port_reply/1 is specific because we want it to be
 %% very selective about what it will grab out of the mailbox.
@@ -254,9 +254,9 @@ io_list_len([H|T], N) ->
         binary(H) -> io_list_len(T, size(H) + N);
         true -> throw({error, partial_len, N})
     end;
-io_list_len(H, N) when binary(H) -> 
+io_list_len(H, N) when binary(H) ->
     size(H) + N;
-io_list_len([], N) -> 
+io_list_len([], N) ->
     N.
 
 %%% We need to make the binary thing we're passing in contiguous
