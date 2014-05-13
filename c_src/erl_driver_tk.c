@@ -84,7 +84,7 @@ edtk_debug(char *f, ...)
     return res;
 }
 
-void 
+void
 edtk_debug_errcall(const char *errpfx, char *msg)
 {
     if (edtk_debug_flag)
@@ -101,7 +101,7 @@ edtk_free_data(void *data)
 /*
 ** Arg want_contiguous: if true, return error if the 'n' we're forwarding
 ** past are in a single contiguous buffer.
-** 
+**
 ** Return value:
 **      -1 = error
 **       0 = Success, there is no more data to be read

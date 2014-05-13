@@ -6,7 +6,7 @@ collection.
 There are two things that this driver can do that the original UNIX
 domain socket driver cannot:
 
-	1. It has a "getfd" call so that Erlang can discover the 
+	1. It has a "getfd" call so that Erlang can discover the
 	   underlying UNIX file descriptor for the socket.
 
 	2. Has the ability to use BSD-style file descriptor passing

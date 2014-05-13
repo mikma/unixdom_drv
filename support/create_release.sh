@@ -15,7 +15,7 @@ mkdir -p ${DIR}/ebin
 for i in `ls -d * | sed -e 's/release//g'`
 do
   [ -d ${i} ] && cp -Rp ${i} ${DIR} && rm -rf  ${DIR}/${i}/CVS
-  [ -f ${i} ] && cp -p ${i} ${DIR} 
+  [ -f ${i} ] && cp -p ${i} ${DIR}
 done
 rm -rf ${DIR}/CVS
 rm -rf ${DIR}/ebin/*.beam
